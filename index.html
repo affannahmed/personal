@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>a question for you</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="sky" id="sky"></div>
+
+  <main class="stage">
+
+    <div class="progress" id="progress" aria-hidden="true">
+      <span class="dot" data-dot="0"></span>
+      <span class="dot" data-dot="1"></span>
+      <span class="dot" data-dot="2"></span>
+      <span class="dot" data-dot="3"></span>
+      <span class="dot" data-dot="4"></span>
+    </div>
+
+    <section class="card" id="card">
+
+      <!-- Step 0: the ask -->
+      <div class="panel active" data-step="0">
+        <p class="eyebrow-note">an important question</p>
+        <h1 class="headline">Will you go on a date with me?</h1>
+        <h6>Nope button apse darta hai, try it!</h6>
+        <div class="ask-actions" id="askActions">
+          <button class="btn btn-primary" id="yesBtn">Yes, I'd love to</button>
+          <button class="btn btn-ghost" id="noBtn">Nope</button>
+        </div>
+        <p class="hint" id="dodgeHint"></p>
+      </div>
+
+      <!-- Step 1: reaction + logistics + time -->
+      <div class="panel" data-step="1">
+        <p class="eyebrow-note">you said yes 🎉</p>
+        <h2 class="headline small">Knew it. Love you Kuchupuchu</h2>
+        <p class="body-text">
+            Here’s the plan: I’ll pick you up and drop you off at home afterward. Full pick and drop service included, hehe. Funny jokes along the way and touching you are also included just be ready!
+        </p>
+
+        <label class="field-label" for="timeInput">So , what time works for you shona mona?</label>
+        <div class="time-row">
+          <input type="time" id="timeInput" value="12:00" />
+          <button class="btn btn-primary" id="timeConfirmBtn">Lock it in</button>
+        </div>
+      </div>
+
+      <!-- Step 2: food -->
+      <div class="panel" data-step="2">
+        <p class="eyebrow-note">next up</p>
+        <h2 class="headline small">Decision time, gorgeous.</h2>
+        <p class="body-text">Whatever you're craving, I'm down for it.</p>
+
+        <div class="option-grid" id="foodGrid">
+          <button class="option-pill" data-food="Pizza">🍕 Pizza</button>
+          <button class="option-pill" data-food="Biryani">🍛 Biryani</button>
+          <button class="option-pill" data-food="Desi food">🍲 Desi food</button>
+          <button class="option-pill" data-food="Chowmein">🍜 Chowmein</button>
+          <button class="option-pill" data-food="BBQ">🍢 BBQ</button>
+          <button class="option-pill" data-food="Surprise me">🎲 Surprise me</button>
+        </div>
+
+        <button class="btn btn-primary btn-continue" id="foodContinueBtn">Continue</button>
+      </div>
+
+      <!-- Step 3: movie -->
+      <div class="panel" data-step="3">
+        <p class="eyebrow-note">last thing</p>
+        <h2 class="headline small">And after that... a movie?</h2>
+
+        <div class="movie-feature" id="movieFeature">
+          <div class="web-corner" aria-hidden="true"></div>
+          <div class="movie-feature-body">
+            <p class="movie-feature-tag">the obvious pick</p>
+            <h3 class="movie-title">Spider-Man: Brand New Day</h3>
+            <p class="movie-sub">Cinepax Jinnah Park &middot; Sunday, 13 September</p>
+            <div class="showtime-row" id="spideyTimes">
+              <button class="showtime" data-movie="Spider-Man: Brand New Day (2D)" data-time="12:45 PM">12:45 PM</button>
+              <button class="showtime" data-movie="Spider-Man: Brand New Day (3D)" data-time="3:45 PM">3:45 PM <span class="tag3d">3D</span></button>
+              <button class="showtime" data-movie="Spider-Man: Brand New Day (2D)" data-time="8:30 PM">8:30 PM</button>
+              <button class="showtime" data-movie="Spider-Man: Brand New Day (2D)" data-time="11:15 PM">11:15 PM</button>
+            </div>
+          </div>
+        </div>
+
+        <details class="alt-movies">
+          <summary>or, if you'd rather see something else</summary>
+          <div class="showtime-row">
+            <button class="showtime" data-movie="Practical Magic 2" data-time="5:30 PM">Practical Magic 2 &middot; 5:30 PM</button>
+            <button class="showtime" data-movie="Runner" data-time="6:30 PM">Runner &middot; 6:30 PM</button>
+          </div>
+        </details>
+      </div>
+
+      <!-- Step 4: confirmation -->
+      <div class="panel" data-step="4">
+        <p class="eyebrow-note">it's a date</p>
+        <h2 class="headline small">Thank you for choosing me shona, and for saying yes.</h2>
+
+        <div class="summary-card" id="summaryCard">
+          <div class="summary-row"><span>Time</span><strong id="sumTime">-</strong></div>
+          <div class="summary-row"><span>Food</span><strong id="sumFood">-</strong></div>
+          <div class="summary-row"><span>Movie</span><strong id="sumMovie">-</strong></div>
+        </div>
+
+        <p class="pickup-line" id="pickupLine"></p>
+        <p class="send-status" id="sendStatus"></p>
+      </div>
+
+    </section>
+  </main>
+
+<script src="script.js"></script>
+</body>
+</html>
