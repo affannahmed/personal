@@ -30,7 +30,6 @@
     position: relative;
   }
   
-  /* ambient floating shapes, one gentle pass, low opacity */
   .sky {
     position: fixed;
     inset: 0;
@@ -135,13 +134,11 @@
     margin: 0 0 22px;
   }
   
-  /* step 0 buttons */
+  /* step 0 buttons — plain, no dodging */
   .ask-actions {
-    position: relative;
     display: flex;
     gap: 14px;
     align-items: center;
-    min-height: 170px;
   }
   
   .btn {
@@ -167,20 +164,18 @@
     background: transparent;
     color: var(--ink-soft);
     border: 1.5px solid var(--paper-edge);
-    position: absolute;
-    left: 168px;
-    top: 0;
   }
+  .btn-ghost:hover { border-color: var(--ink-soft); }
   
   .hint {
-    margin-top: 44px;
+    margin-top: 16px;
     font-size: 13px;
     color: var(--ink-soft);
     font-style: italic;
     min-height: 18px;
   }
   
-  /* time picker */
+  /* form fields */
   .field-label {
     display: block;
     font-weight: 700;
@@ -191,9 +186,11 @@
   .time-row {
     display: flex;
     gap: 10px;
+    margin-bottom: 20px;
   }
   
-  .time-row input[type="time"] {
+  .time-row input[type="time"],
+  .time-row input[type="text"] {
     flex: 1;
     font-family: 'Karla', sans-serif;
     font-size: 16px;
@@ -204,13 +201,15 @@
     color: var(--ink);
   }
   
-  /* food grid */
+  /* option grids (food, day, movie yes/no) */
   .option-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
     margin-bottom: 22px;
   }
+  
+  .option-grid.two-col { margin-bottom: 20px; }
   
   .option-pill {
     font-family: 'Karla', sans-serif;
@@ -236,6 +235,10 @@
   
   .btn-continue { width: 100%; opacity: .45; pointer-events: none; }
   .btn-continue.ready { opacity: 1; pointer-events: auto; }
+
+  .hidden { display: none !important; }
+
+  .movie-options { margin-bottom: 4px; }
   
   /* movie step - comic accent */
   .movie-feature {
@@ -322,6 +325,7 @@
   .alt-movies {
     font-size: 13.5px;
     color: var(--ink-soft);
+    margin-bottom: 20px;
   }
   
   .alt-movies summary {
@@ -351,7 +355,7 @@
   .pickup-line {
     font-family: 'Fraunces', serif;
     font-style: italic;
-    font-size: 17px;
+    font-size: 16px;
     color: var(--rose-dark);
     margin: 0 0 6px;
   }
