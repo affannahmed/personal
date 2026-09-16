@@ -1,9 +1,8 @@
 /* =========================================================
    BEFORE YOU DEPLOY — read this
    =========================================================
-   This site emails you the answers (time / food / movie) using
-   Formspree, a free service that turns a form submission into
-   an email. You need a form ID once, it takes 2 minutes:
+   This site emails you the answers using Formspree, a free
+   service that turns a form submission into an email.
 
    1. Go to https://formspree.io and sign up (free plan is fine).
    2. Create a new form, set the recipient email to
@@ -11,19 +10,22 @@
       Formspree sends you.
    3. Copy the "Form ID" (it looks like "abcdwxyz") or the full
       endpoint they give you, e.g. https://formspree.io/f/abcdwxyz
-   4. Paste it below, replacing YOUR_FORM_ID.
+   4. Paste it below, replacing the existing endpoint if needed.
 
-   If you skip this step, the page still works end-to-end, it
-   just won't be able to email you — it will fall back to
-   opening your email app with everything pre-filled instead.
+   If it can't reach Formspree, the page still works end-to-end —
+   it falls back to opening your email app with everything
+   pre-filled instead.
    ========================================================= */
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/mvkonnyg";
 const NOTIFY_EMAIL = "affanahmed395@gmail.com";
 
 // ---------- state ----------
 const state = {
+  day: null,
   time: null,
+  place: null,
   food: null,
+  movieWanted: null, // true | false
   movie: null,
   movieTime: null,
 };
@@ -61,60 +63,47 @@ function goToStep(n) {
 goToStep(0);
 
 // ---------- step 0: the ask ----------
-const askActions = document.getElementById('askActions');
 const noBtn = document.getElementById('noBtn');
 const yesBtn = document.getElementById('yesBtn');
-const dodgeHint = document.getElementById('dodgeHint');
-
-const dodgeLines = [
-  "nice try.",
-  "not happening.",
-  "you can't catch this one.",
-  "come on, the other button is right there.",
-  "okay you're persistent, I respect it. still no.",
-];
-let dodgeCount = 0;
-
-function dodgeNo() {
-  const bounds = askActions.getBoundingClientRect();
-  const btnRect = noBtn.getBoundingClientRect();
-  const maxX = Math.max(bounds.width - btnRect.width - 4, 0);
-  const maxY = Math.max(bounds.height - btnRect.height - 4, 0);
-  const x = Math.random() * maxX;
-  const y = Math.random() * maxY;
-  noBtn.style.left = x + 'px';
-  noBtn.style.top = y + 'px';
-  dodgeCount++;
-  dodgeHint.textContent = dodgeLines[Math.min(dodgeCount - 1, dodgeLines.length - 1)];
-}
-
-function placeNoButtonInitially() {
-  const bounds = askActions.getBoundingClientRect();
-  const yesRect = yesBtn.getBoundingClientRect();
-  const noRect = noBtn.getBoundingClientRect();
-  let left = yesRect.right - bounds.left + 14;
-  const maxLeft = Math.max(bounds.width - noRect.width - 4, 0);
-  left = Math.min(left, maxLeft);
-  noBtn.style.left = left + 'px';
-  noBtn.style.top = (yesRect.top - bounds.top) + 'px';
-}
-
-window.addEventListener('load', placeNoButtonInitially);
-window.addEventListener('resize', placeNoButtonInitially);
-
-noBtn.addEventListener('pointerenter', dodgeNo);
-noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); dodgeNo(); }, { passive: false });
-noBtn.addEventListener('click', (e) => { e.preventDefault(); dodgeNo(); });
+const declineHint = document.getElementById('declineHint');
 
 yesBtn.addEventListener('click', () => goToStep(1));
 
-// ---------- step 1: time ----------
-const timeInput = document.getElementById('timeInput');
-const timeConfirmBtn = document.getElementById('timeConfirmBtn');
+noBtn.addEventListener('click', () => {
+  // No means no — button just registers the answer, nothing cute about it.
+  yesBtn.disabled = true;
+  noBtn.disabled = true;
+  yesBtn.style.opacity = '0.4';
+  noBtn.style.opacity = '0.4';
+  declineHint.textContent = "Okay, no worries. Thanks for reading anyway.";
+});
 
-timeConfirmBtn.addEventListener('click', () => {
-  if (!timeInput.value) return;
+// ---------- step 1: day, time, place ----------
+const dayGrid = document.getElementById('dayGrid');
+const timeInput = document.getElementById('timeInput');
+const placeInput = document.getElementById('placeInput');
+const logisticsContinueBtn = document.getElementById('logisticsContinueBtn');
+
+dayGrid.addEventListener('click', (e) => {
+  const btn = e.target.closest('.option-pill');
+  if (!btn) return;
+  dayGrid.querySelectorAll('.option-pill').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  state.day = btn.dataset.day;
+  updateLogisticsReady();
+});
+
+timeInput.addEventListener('change', updateLogisticsReady);
+
+function updateLogisticsReady() {
+  const ready = Boolean(state.day) && Boolean(timeInput.value);
+  logisticsContinueBtn.classList.toggle('ready', ready);
+}
+
+logisticsContinueBtn.addEventListener('click', () => {
+  if (!state.day || !timeInput.value) return;
   state.time = to12Hour(timeInput.value);
+  state.place = placeInput.value.trim() || null;
   goToStep(2);
 });
 
@@ -153,7 +142,31 @@ foodContinueBtn.addEventListener('click', () => {
   goToStep(3);
 });
 
-// ---------- step 3: movie ----------
+// ---------- step 3: movie (optional) ----------
+const movieAskGrid = document.getElementById('movieAskGrid');
+const movieOptions = document.getElementById('movieOptions');
+const movieContinueBtn = document.getElementById('movieContinueBtn');
+
+movieAskGrid.addEventListener('click', (e) => {
+  const btn = e.target.closest('.option-pill');
+  if (!btn) return;
+  movieAskGrid.querySelectorAll('.option-pill').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+
+  const wantsMovie = btn.dataset.movieWanted === 'yes';
+  state.movieWanted = wantsMovie;
+
+  if (wantsMovie) {
+    movieOptions.classList.remove('hidden');
+    movieContinueBtn.classList.remove('ready'); // must pick a showtime instead
+  } else {
+    movieOptions.classList.add('hidden');
+    state.movie = null;
+    state.movieTime = null;
+    movieContinueBtn.classList.add('ready');
+  }
+});
+
 document.querySelectorAll('.showtime').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.showtime').forEach(b => b.classList.remove('selected'));
@@ -164,15 +177,25 @@ document.querySelectorAll('.showtime').forEach(btn => {
   });
 });
 
+movieContinueBtn.addEventListener('click', () => {
+  if (state.movieWanted === null) return;
+  if (state.movieWanted && !state.movie) return; // picking a showtime finishes automatically
+  finish();
+});
+
 // ---------- step 4: confirmation + send ----------
 function finish() {
+  document.getElementById('sumDay').textContent = state.day;
   document.getElementById('sumTime').textContent = state.time;
+  document.getElementById('sumPlace').textContent = state.place || "wherever I pick";
   document.getElementById('sumFood').textContent = state.food;
-  document.getElementById('sumMovie').textContent = `${state.movie} — ${state.movieTime}`;
+  document.getElementById('sumMovie').textContent = state.movie
+    ? `${state.movie} — ${state.movieTime}`
+    : "skipping the movie this time";
 
   const pickup = minutesBefore(timeInput.value, 20);
   document.getElementById('pickupLine').textContent =
-    `I'll be there by ${pickup} — twenty minutes early, just in case.`;
+    `I'll aim to be there by ${pickup}, a bit early just in case.`;
 
   goToStep(4);
   sendDetails(pickup);
@@ -181,11 +204,13 @@ function finish() {
 async function sendDetails(pickup) {
   const statusEl = document.getElementById('sendStatus');
   const payload = {
-    _subject: "She said yes 🎉 — date details",
-    date_time: state.time,
+    _subject: "She said yes — date details",
+    day: state.day,
+    time: state.time,
     pickup_time: pickup,
+    place: state.place || "not specified — picking myself",
     food_choice: state.food,
-    movie_choice: `${state.movie} (${state.movieTime})`,
+    movie_choice: state.movie ? `${state.movie} (${state.movieTime})` : "no movie",
   };
 
   if (FORMSPREE_ENDPOINT.includes('YOUR_FORM_ID')) {
@@ -207,9 +232,9 @@ async function sendDetails(pickup) {
   } catch (err) {
     // fallback: open a pre-filled email as a backup delivery method
     const body = encodeURIComponent(
-      `Time: ${state.time}\nPickup: ${pickup}\nFood: ${state.food}\nMovie: ${state.movie} (${state.movieTime})`
+      `Day: ${state.day}\nTime: ${state.time}\nPickup: ${pickup}\nPlace: ${payload.place}\nFood: ${state.food}\nMovie: ${payload.movie_choice}`
     );
-    const mailto = `mailto:${NOTIFY_EMAIL}?subject=${encodeURIComponent('She said yes 🎉 — date details')}&body=${body}`;
+    const mailto = `mailto:${NOTIFY_EMAIL}?subject=${encodeURIComponent('She said yes — date details')}&body=${body}`;
     statusEl.innerHTML = `<a href="${mailto}">tap here to send the details</a>`;
   }
 }
