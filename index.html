@@ -27,35 +27,46 @@
 
       <!-- Step 0: the ask -->
       <div class="panel active" data-step="0">
-        <p class="eyebrow-note">an important question</p>
+        <p class="eyebrow-note">a question</p>
         <h1 class="headline">Will you go on a date with me?</h1>
-        <h6>Nope button apse darta hai, try it!</h6>
         <div class="ask-actions" id="askActions">
-          <button class="btn btn-primary" id="yesBtn">Yes, I'd love to</button>
-          <button class="btn btn-ghost" id="noBtn">Nope</button>
+          <button class="btn btn-primary" id="yesBtn">Yes</button>
+          <button class="btn btn-ghost" id="noBtn">No</button>
         </div>
-        <p class="hint" id="dodgeHint"></p>
+        <p class="hint" id="declineHint"></p>
       </div>
 
-      <!-- Step 1: reaction + logistics + time -->
+      <!-- Step 1: reaction + day + time + place -->
       <div class="panel" data-step="1">
         <p class="eyebrow-note">you said yes 🎉</p>
-        <h2 class="headline small">Knew it. Love you Kuchupuchu</h2>
+        <h2 class="headline small">Glad you said yes.</h2>
         <p class="body-text">
-            Here’s the plan: I’ll pick you up and drop you off at home afterward. Full pick and drop service included, hehe. Funny jokes along the way and touching you are also included just be ready!
+          I'll pick you up and drop you back home after. You pick the day, whatever time works, and the place if you've got somewhere in mind.
         </p>
 
-        <label class="field-label" for="timeInput">So , what time works for you shona mona?</label>
+        <label class="field-label">Which day works for you?</label>
+        <div class="option-grid two-col" id="dayGrid">
+          <button class="option-pill" data-day="Saturday">Saturday</button>
+          <button class="option-pill" data-day="Sunday">Sunday</button>
+        </div>
+
+        <label class="field-label" for="timeInput">What time?</label>
         <div class="time-row">
           <input type="time" id="timeInput" value="12:00" />
-          <button class="btn btn-primary" id="timeConfirmBtn">Lock it in</button>
         </div>
+
+        <label class="field-label" for="placeInput">Any place in mind? (optional — I'll pick something if not)</label>
+        <div class="time-row">
+          <input type="text" id="placeInput" placeholder="e.g. somewhere we've talked about" />
+        </div>
+
+        <button class="btn btn-primary btn-continue" id="logisticsContinueBtn">Continue</button>
       </div>
 
       <!-- Step 2: food -->
       <div class="panel" data-step="2">
         <p class="eyebrow-note">next up</p>
-        <h2 class="headline small">Decision time, gorgeous.</h2>
+        <h2 class="headline small">What do you feel like eating?</h2>
         <p class="body-text">Whatever you're craving, I'm down for it.</p>
 
         <div class="option-grid" id="foodGrid">
@@ -70,42 +81,53 @@
         <button class="btn btn-primary btn-continue" id="foodContinueBtn">Continue</button>
       </div>
 
-      <!-- Step 3: movie -->
+      <!-- Step 3: movie (optional) -->
       <div class="panel" data-step="3">
         <p class="eyebrow-note">last thing</p>
-        <h2 class="headline small">And after that... a movie?</h2>
+        <h2 class="headline small">Want to catch a movie too?</h2>
 
-        <div class="movie-feature" id="movieFeature">
-          <div class="web-corner" aria-hidden="true"></div>
-          <div class="movie-feature-body">
-            <p class="movie-feature-tag">the obvious pick</p>
-            <h3 class="movie-title">Spider-Man: Brand New Day</h3>
-            <p class="movie-sub">Cinepax Jinnah Park &middot; Sunday, 13 September</p>
-            <div class="showtime-row" id="spideyTimes">
-              <button class="showtime" data-movie="Spider-Man: Brand New Day (2D)" data-time="12:45 PM">12:45 PM</button>
-              <button class="showtime" data-movie="Spider-Man: Brand New Day (3D)" data-time="3:45 PM">3:45 PM <span class="tag3d">3D</span></button>
-              <button class="showtime" data-movie="Spider-Man: Brand New Day (2D)" data-time="8:30 PM">8:30 PM</button>
-              <button class="showtime" data-movie="Spider-Man: Brand New Day (2D)" data-time="11:15 PM">11:15 PM</button>
-            </div>
-          </div>
+        <div class="option-grid two-col" id="movieAskGrid">
+          <button class="option-pill" data-movie-wanted="yes">Yeah, let's</button>
+          <button class="option-pill" data-movie-wanted="no">Not this time</button>
         </div>
 
-        <details class="alt-movies">
-          <summary>or, if you'd rather see something else</summary>
-          <div class="showtime-row">
-            <button class="showtime" data-movie="Practical Magic 2" data-time="5:30 PM">Practical Magic 2 &middot; 5:30 PM</button>
-            <button class="showtime" data-movie="Runner" data-time="6:30 PM">Runner &middot; 6:30 PM</button>
+        <div id="movieOptions" class="movie-options hidden">
+          <div class="movie-feature" id="movieFeature">
+            <div class="web-corner" aria-hidden="true"></div>
+            <div class="movie-feature-body">
+              <p class="movie-feature-tag">the obvious pick</p>
+              <h3 class="movie-title">Spider-Man: Brand New Day</h3>
+              <p class="movie-sub">Cinepax Jinnah Park &middot; Sunday, 13 September</p>
+              <div class="showtime-row" id="spideyTimes">
+                <button class="showtime" data-movie="Spider-Man: Brand New Day (2D)" data-time="12:45 PM">12:45 PM</button>
+                <button class="showtime" data-movie="Spider-Man: Brand New Day (3D)" data-time="3:45 PM">3:45 PM <span class="tag3d">3D</span></button>
+                <button class="showtime" data-movie="Spider-Man: Brand New Day (2D)" data-time="8:30 PM">8:30 PM</button>
+                <button class="showtime" data-movie="Spider-Man: Brand New Day (2D)" data-time="11:15 PM">11:15 PM</button>
+              </div>
+            </div>
           </div>
-        </details>
+
+          <details class="alt-movies">
+            <summary>or, if you'd rather see something else</summary>
+            <div class="showtime-row">
+              <button class="showtime" data-movie="Practical Magic 2" data-time="5:30 PM">Practical Magic 2 &middot; 5:30 PM</button>
+              <button class="showtime" data-movie="Runner" data-time="6:30 PM">Runner &middot; 6:30 PM</button>
+            </div>
+          </details>
+        </div>
+
+        <button class="btn btn-primary btn-continue" id="movieContinueBtn">Continue</button>
       </div>
 
       <!-- Step 4: confirmation -->
       <div class="panel" data-step="4">
-        <p class="eyebrow-note">it's a date</p>
-        <h2 class="headline small">Thank you for choosing me shona, and for saying yes.</h2>
+        <p class="eyebrow-note">it's a plan</p>
+        <h2 class="headline small">Thanks for saying yes.</h2>
 
         <div class="summary-card" id="summaryCard">
+          <div class="summary-row"><span>Day</span><strong id="sumDay">-</strong></div>
           <div class="summary-row"><span>Time</span><strong id="sumTime">-</strong></div>
+          <div class="summary-row"><span>Place</span><strong id="sumPlace">-</strong></div>
           <div class="summary-row"><span>Food</span><strong id="sumFood">-</strong></div>
           <div class="summary-row"><span>Movie</span><strong id="sumMovie">-</strong></div>
         </div>
